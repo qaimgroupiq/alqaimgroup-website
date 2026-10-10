@@ -1,19 +1,284 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>لوحة تحكم | مجموعة القائم</title>
-<style>
-:root{--bg:#0b0d10;--panel:#13171c;--line:#2b333c;--text:#f4f6f8;--muted:#9ba6b2;--red:#e53935}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}aside{background:#0f1216;border-left:1px solid var(--line);padding:22px 15px}.brand{display:flex;align-items:center;gap:12px;padding:5px 5px 22px;border-bottom:1px solid var(--line)}.mark{width:42px;height:42px;display:grid;place-items:center;border:2px solid var(--red);color:var(--red);font-weight:bold;font-size:22px}.brand strong{display:block}.brand small{color:var(--muted);font-size:10px}.nav{display:grid;gap:8px;margin-top:22px}.nav button{border:1px solid transparent;background:transparent;color:#cbd1d8;text-align:right;padding:13px;border-radius:9px;cursor:pointer}.nav button.active,.nav button:hover{background:#251719;border-color:#512b2b;color:white}main{padding:28px;max-width:1300px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.eyebrow{color:#ff5a4f;font-size:12px;margin-bottom:8px}.top h1{margin:0;font-size:30px}.top p,.muted{color:var(--muted);font-size:13px;line-height:1.8}.status,.card,.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px}.status{padding:10px 13px;font-size:12px;color:#f0d2a4}.notice{background:#211a12;border:1px solid #5a4020;color:#f0d2a4;border-radius:12px;padding:14px;line-height:1.8;font-size:13px;margin-bottom:20px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:20px}.stat{padding:18px}.stat span{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:26px;margin-top:10px}.card{padding:20px;margin-bottom:18px}.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}.card h2{margin:0;font-size:17px}.btn{border:1px solid var(--line);border-radius:8px;background:#20262d;color:white;padding:10px 14px;cursor:pointer}.primary{background:var(--red);border-color:var(--red)}.empty{border:1px dashed #3a444f;border-radius:10px;padding:26px;text-align:center;color:var(--muted);line-height:1.9}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:#c5ccd4}.field input,.field textarea,.field select{width:100%;background:#0d1014;border:1px solid #333d47;border-radius:8px;color:white;padding:12px}.field textarea{min-height:90px}.hidden{display:none!important}.foot{text-align:center;color:#687481;font-size:11px;padding:14px}
-@media(max-width:780px){.layout{grid-template-columns:1fr}aside{padding:13px}.nav{grid-template-columns:repeat(2,1fr);margin-top:12px}.top{align-items:flex-start;flex-direction:column}main{padding:16px}.stats{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}}
-</style></head><body><div class="layout"><aside><div class="brand"><div class="mark">Q</div><div><strong>مجموعة القائم</strong><small>ENGINEERING WORKS</small></div></div><nav class="nav"><button class="active" data-view="overview">▦ نظرة عامة</button><button data-view="projects">▧ الأعمال والمشاريع</button><button data-view="texts">T نصوص الموقع</button><button data-view="settings">⚙ الإعدادات</button></nav></aside>
-<main><header class="top"><div><div class="eyebrow">CONTENT MANAGEMENT</div><h1 id="pageTitle">لوحة التحكم</h1><p>إدارة محتوى موقع مجموعة القائم مع الحفاظ على الهوية الحالية.</p></div><div class="status">● وضع التجهيز — غير متصل بقاعدة البيانات</div></header>
-<div class="notice"><b>تنبيه:</b> هذه واجهة أولية فقط. لن تحفظ التغييرات فعليًا حتى نربط قاعدة البيانات وتخزين الصور ونفعّل تسجيل الدخول.</div>
-<section id="view-overview"><div class="stats"><div class="stat"><span>المشاريع</span><strong>—</strong><span>بانتظار الربط</span></div><div class="stat"><span>الصور</span><strong>—</strong><span>بانتظار الربط</span></div><div class="stat"><span>نصوص الموقع</span><strong>—</strong><span>بانتظار الربط</span></div></div><div class="card"><div class="cardhead"><h2>إدارة المحتوى</h2></div><div class="empty">إضافة مشاريع وصور، تعديل أسماء المشاريع وأوصافها، وتحرير النصوص.<br>بعد اكتمال الربط ستظهر التغييرات على واجهة الزوار.</div></div><div class="card"><h2>مراحل الإكمال</h2><p class="muted">١. تجهيز الواجهة — جاهز مبدئيًا<br>٢. إعداد قاعدة بيانات وتخزين صور<br>٣. تأمين دخول المدير<br>٤. ربط الموقع بالبيانات<br>٥. الاختبار قبل النشر</p></div></section>
-<section id="view-projects" class="hidden"><div class="card"><div class="cardhead"><h2>الأعمال والمشاريع</h2><button class="btn primary" id="newProject">+ مشروع جديد</button></div><div id="projectEmpty" class="empty">لا توجد بيانات متصلة بعد. سنربط المشاريع بقاعدة البيانات لاحقًا.</div><form id="projectForm" class="hidden"><div class="formgrid"><div class="field"><label>اسم المشروع</label><input placeholder="مثال: تنفيذ واجهة معدنية" required></div><div class="field"><label>التصنيف</label><select><option>حدادة ولحام</option><option>أعمال ألمنيوم</option><option>ديكورات MDF</option><option>أعمال عامة</option></select></div><div class="field full"><label>وصف المشروع</label><textarea placeholder="وصف مختصر"></textarea></div><div class="field full"><label>صور المشروع</label><input type="file" accept="image/*" multiple><span class="muted">سيعمل رفع الصور بعد ربط خدمة التخزين.</span></div></div><p><button class="btn" type="button" disabled>الحفظ غير مفعّل حتى اكتمال الربط</button> <button class="btn" type="button" id="cancelProject">إلغاء</button></p></form></div></section>
-<section id="view-texts" class="hidden"><div class="card"><h2>نصوص الموقع</h2><div class="formgrid"><div class="field full"><label>العنوان الرئيسي</label><input value="نبني الفكرة. ونصنع لها حضورًا."></div><div class="field full"><label>وصف الواجهة</label><textarea placeholder="وصف الشركة"></textarea></div><div class="field"><label>عنوان من نحن</label><input placeholder="من نحن"></div><div class="field"><label>رقم التواصل</label><input placeholder="رقم التواصل"></div></div><p><button class="btn" disabled>الحفظ غير مفعّل حتى اكتمال الربط</button></p></div></section>
-<section id="view-settings" class="hidden"><div class="card"><h2>الإعدادات والربط</h2><p class="muted">سنربط اللوحة بقاعدة بيانات وتخزين صور مع تسجيل دخول للمدير. لا تضع مفاتيح إدارية أو رموز وصول داخل ملفات الواجهة.</p><div class="empty">قاعدة البيانات: غير مهيأة<br>تسجيل الدخول: غير مفعّل<br>الحفظ: متوقف حتى اكتمال الربط الآمن</div></div></section><div class="foot">مجموعة القائم للأعمال الهندسية · لوحة إدارة المحتوى</div></main></div>
-<script>
-const buttons=document.querySelectorAll('[data-view]'),titles={overview:'لوحة التحكم',projects:'إدارة الأعمال والمشاريع',texts:'إدارة نصوص الموقع',settings:'الإعدادات'};
-buttons.forEach(b=>b.addEventListener('click',()=>{buttons.forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('main section[id^="view-"]').forEach(s=>s.classList.toggle('hidden',s.id!=='view-'+b.dataset.view));document.getElementById('pageTitle').textContent=titles[b.dataset.view]}));
-const form=document.getElementById('projectForm'),empty=document.getElementById('projectEmpty');document.getElementById('newProject').onclick=()=>{form.classList.remove('hidden');empty.classList.add('hidden')};document.getElementById('cancelProject').onclick=()=>{form.classList.add('hidden');empty.classList.remove('hidden')};
-</script></body></html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة تحكم | مجموعة القائم</title>
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #13171c;
+      --line: #2b333c;
+      --text: #f4f6f8;
+      --muted: #9ba6b2;
+      --red: #e53935;
+      --gold: #d7b46a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: Tahoma, Arial, sans-serif;
+    }
+    button, input, textarea, select { font: inherit; }
+    .layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+    aside {
+      background: #0f1216; border-left: 1px solid var(--line);
+      padding: 22px 15px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 12px;
+      padding: 5px 5px 22px; border-bottom: 1px solid var(--line);
+    }
+    .brand-logo {
+      width: 48px; height: 48px; flex: 0 0 48px;
+      display: grid; place-items: center; overflow: hidden;
+      border: 1px solid var(--red); border-radius: 7px; padding: 3px;
+      background: #fff;
+    }
+    .brand-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .brand strong { display: block; font-size: 15px; }
+    .brand small { display: block; color: var(--muted); font-size: 10px; margin-top: 5px; letter-spacing: .4px; }
+    .nav { display: grid; gap: 8px; margin-top: 22px; }
+    .nav button {
+      border: 1px solid transparent; background: transparent; color: #cbd1d8;
+      text-align: right; padding: 13px; border-radius: 9px; cursor: pointer;
+    }
+    .nav button.active, .nav button:hover {
+      background: #251719; border-color: #512b2b; color: white;
+    }
+    main { padding: 28px; width: 100%; max-width: 1400px; margin: 0 auto; min-width: 0; }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 24px; }
+    .eyebrow { color: #ff5a4f; font-size: 12px; margin-bottom: 8px; }
+    .top h1 { margin: 0; font-size: 30px; }
+    .top p, .muted { color: var(--muted); font-size: 13px; line-height: 1.9; }
+    .status {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+      padding: 10px 14px; font-size: 12px; color: var(--gold); white-space: nowrap;
+    }
+    .notice {
+      background: #211a12; border: 1px solid #5a4020; color: #f0d2a4;
+      border-radius: 12px; padding: 14px; line-height: 1.9; font-size: 13px; margin-bottom: 20px;
+    }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; margin-bottom: 20px; }
+    .stat, .card { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; }
+    .stat { padding: 18px; }
+    .stat span { color: var(--muted); font-size: 12px; }
+    .stat strong { display: block; font-size: 26px; margin-top: 10px; }
+    .card { padding: 20px; margin-bottom: 18px; }
+    .cardhead { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .card h2 { margin: 0; font-size: 17px; }
+    .btn {
+      border: 1px solid var(--line); border-radius: 8px; background: #20262d;
+      color: white; padding: 10px 14px; cursor: pointer;
+    }
+    .btn:hover { filter: brightness(1.12); }
+    .primary { background: var(--red); border-color: var(--red); }
+    .empty {
+      border: 1px dashed #3a444f; border-radius: 10px; padding: 26px;
+      text-align: center; color: var(--muted); line-height: 1.9;
+    }
+    .formgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .field { display: grid; gap: 7px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 12px; color: #c5ccd4; }
+    .field input, .field textarea, .field select {
+      width: 100%; background: #0d1014; border: 1px solid #333d47;
+      border-radius: 8px; color: white; padding: 12px; min-width: 0;
+    }
+    .field textarea { min-height: 100px; resize: vertical; }
+    .field input[type="file"] { direction: rtl; }
+    .hint { color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .hidden { display: none !important; }
+    .foot { text-align: center; color: #687481; font-size: 11px; padding: 14px 0 4px; }
+    .project-list { display: grid; gap: 10px; margin-top: 14px; }
+    .project-row { border: 1px solid var(--line); border-radius: 9px; padding: 12px; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .project-row strong { display: block; font-size: 13px; margin-bottom: 5px; }
+    .project-row span { color: var(--muted); font-size: 12px; }
+    @media (max-width: 780px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { padding: 13px; border-left: 0; border-bottom: 1px solid var(--line); }
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 12px; }
+      main { padding: 16px; }
+      .top { align-items: flex-start; flex-direction: column; }
+      .stats { grid-template-columns: 1fr; }
+      .formgrid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .project-row { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside>
+      <div class="brand">
+        <div class="brand-logo">
+          <img src="../logo.png" alt="شعار مجموعة القائم">
+        </div>
+        <div>
+          <strong>مجموعة القائم</strong>
+          <small>ENGINEERING WORKS</small>
+        </div>
+      </div>
+      <nav class="nav" aria-label="القائمة الرئيسية">
+        <button class="active" type="button" data-view="overview">▦ نظرة عامة</button>
+        <button type="button" data-view="projects">▧ الأعمال والمشاريع</button>
+        <button type="button" data-view="texts">T نصوص الموقع</button>
+        <button type="button" data-view="settings">⚙ الإعدادات</button>
+      </nav>
+    </aside>
+
+    <main>
+      <header class="top">
+        <div>
+          <div class="eyebrow">CONTENT MANAGEMENT</div>
+          <h1 id="pageTitle">لوحة التحكم</h1>
+          <p>إدارة محتوى موقع مجموعة القائم مع الحفاظ على الهوية الحالية.</p>
+        </div>
+        <div class="status">● الواجهة جاهزة — الربط غير مفعّل</div>
+      </header>
+
+      <div class="notice">
+        <strong>تنبيه:</strong>
+        هذه واجهة أولية للوحة التحكم فقط. التعديلات هنا لا تُحفظ على الموقع ولا تُرفع الصور فعليًا حتى نربط قاعدة البيانات وتخزين الصور ونفعّل تسجيل دخول آمن.
+      </div>
+
+      <section id="view-overview">
+        <div class="stats">
+          <div class="stat"><span>المشاريع</span><strong id="projectCount">—</strong><span>بانتظار ربط البيانات</span></div>
+          <div class="stat"><span>الصور</span><strong>—</strong><span>بانتظار ربط التخزين</span></div>
+          <div class="stat"><span>نصوص الموقع</span><strong>—</strong><span>بانتظار ربط المحتوى</span></div>
+        </div>
+        <div class="card">
+          <div class="cardhead"><h2>إدارة المحتوى</h2></div>
+          <div class="empty">
+            من القائمة الجانبية يمكنك فتح قسم الأعمال والمشاريع أو نصوص الموقع أو الإعدادات.<br>
+            بعد اكتمال الربط الآمن ستظهر التغييرات في الموقع الفعلي.
+          </div>
+        </div>
+        <div class="card">
+          <div class="cardhead"><h2>مراحل الإكمال</h2></div>
+          <p class="muted">١. تجهيز الواجهة — مكتمل مبدئيًا.</p>
+          <p class="muted">٢. ربط قاعدة بيانات وحفظ الصور — لم يُنفّذ بعد.</p>
+          <p class="muted">٣. تأمين دخول المدير — لم يُنفّذ بعد.</p>
+          <p class="muted">٤. الاختبار قبل النشر — بعد اكتمال الربط.</p>
+        </div>
+      </section>
+
+      <section id="view-projects" class="hidden">
+        <div class="card">
+          <div class="cardhead">
+            <h2>الأعمال والمشاريع</h2>
+            <button class="btn primary" id="newProject" type="button">+ مشروع جديد</button>
+          </div>
+          <div id="projectEmpty" class="empty">لا توجد مشاريع مرتبطة بلوحة التحكم حاليًا. سيُفعّل الحفظ ورفع الصور بعد ربط قاعدة البيانات وخدمة التخزين.</div>
+          <div id="projectList" class="project-list"></div>
+          <form id="projectForm" class="hidden">
+            <div class="formgrid">
+              <div class="field">
+                <label for="projectName">اسم المشروع</label>
+                <input id="projectName" placeholder="مثال: تنفيذ واجهة معدنية" required>
+              </div>
+              <div class="field">
+                <label for="projectCategory">التصنيف</label>
+                <select id="projectCategory">
+                  <option>حدادة ولحام</option>
+                  <option>أعمال ألمنيوم</option>
+                  <option>ديكورات MDF</option>
+                  <option>أعمال عامة</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="projectDescription">وصف المشروع</label>
+                <textarea id="projectDescription" placeholder="اكتب وصفًا مختصرًا للمشروع"></textarea>
+              </div>
+              <div class="field full">
+                <label for="projectImages">صور المشروع</label>
+                <input id="projectImages" type="file" accept="image/*" multiple>
+                <span class="hint">اختيار الملفات هنا تجريبي فقط؛ لن تُرفع الصور أو تُحفظ حتى تفعيل الربط.</span>
+              </div>
+            </div>
+            <p>
+              <button class="btn" type="button" disabled>الحفظ غير مفعّل حاليًا</button>
+              <button class="btn" type="button" id="cancelProject">إلغاء</button>
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <section id="view-texts" class="hidden">
+        <div class="card">
+          <div class="cardhead"><h2>نصوص الموقع</h2></div>
+          <div class="formgrid">
+            <div class="field full">
+              <label for="heroTitle">العنوان الرئيسي</label>
+              <input id="heroTitle" value="نبني الفكرة. ونصنع لها حضورًا.">
+            </div>
+            <div class="field full">
+              <label for="heroDescription">وصف الواجهة</label>
+              <textarea id="heroDescription" placeholder="اكتب وصف الشركة هنا"></textarea>
+            </div>
+            <div class="field">
+              <label for="aboutTitle">عنوان قسم من نحن</label>
+              <input id="aboutTitle" placeholder="من نحن">
+            </div>
+            <div class="field">
+              <label for="contactPhone">رقم التواصل</label>
+              <input id="contactPhone" placeholder="رقم التواصل">
+            </div>
+          </div>
+          <p><button class="btn" type="button" disabled>الحفظ غير مفعّل حتى اكتمال الربط</button></p>
+          <p class="hint">يمكنك رؤية الحقول وتجهيز النصوص، لكن لن تتغير واجهة الموقع المنشور قبل تنفيذ نظام الحفظ.</p>
+        </div>
+      </section>
+
+      <section id="view-settings" class="hidden">
+        <div class="card">
+          <div class="cardhead"><h2>الإعدادات والربط</h2></div>
+          <p class="muted">سنربط اللوحة بقاعدة بيانات وتخزين صور مع تسجيل دخول آمن للمدير. لا تضع كلمات مرور أو مفاتيح وصول داخل ملفات الواجهة.</p>
+          <div class="empty">
+            قاعدة البيانات: غير مهيأة<br>
+            تخزين الصور: غير مهيأ<br>
+            تسجيل الدخول: غير مفعّل<br>
+            الحفظ: متوقف حتى اكتمال الربط الآمن
+          </div>
+        </div>
+      </section>
+
+      <div class="foot">مجموعة القائم للأعمال الهندسية · لوحة إدارة المحتوى</div>
+    </main>
+  </div>
+
+  <script>
+    const navButtons = document.querySelectorAll('[data-view]');
+    const pageTitles = {
+      overview: 'لوحة التحكم',
+      projects: 'إدارة الأعمال والمشاريع',
+      texts: 'إدارة نصوص الموقع',
+      settings: 'الإعدادات'
+    };
+
+    navButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        navButtons.forEach((item) => item.classList.toggle('active', item === button));
+        document.querySelectorAll('main section[id^="view-"]').forEach((section) => {
+          section.classList.toggle('hidden', section.id !== 'view-' + button.dataset.view);
+        });
+        document.getElementById('pageTitle').textContent = pageTitles[button.dataset.view];
+      });
+    });
+
+    const projectForm = document.getElementById('projectForm');
+    const projectEmpty = document.getElementById('projectEmpty');
+
+    document.getElementById('newProject').addEventListener('click', () => {
+      projectForm.classList.remove('hidden');
+      projectEmpty.classList.add('hidden');
+    });
+
+    document.getElementById('cancelProject').addEventListener('click', () => {
+      projectForm.classList.add('hidden');
+      projectEmpty.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
