@@ -7,6 +7,7 @@
 <link rel="icon" type="image/png" sizes="256x256" href="favicon.png">
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header class="site-header">
@@ -127,13 +128,135 @@
 </main>
 <footer><div class="container footer-grid"><div><img src="logo.png" class="footer-logo" alt="مجموعة القائم"><p>مجموعة القائم للأعمال الهندسية<br>النجف – العراق</p></div><div><b>روابط</b><a href="#services">خدماتنا</a><a href="#projects">أعمالنا</a><a href="#about">عن المجموعة</a></div><div><b>تواصل</b><a href="tel:+9647810101322">الهاتف 0781 010 1322</a><a href="https://wa.me/9647877335596" target="_blank">واتساب 0787 733 5596</a><a href="https://www.facebook.com/qaimgroup">Facebook</a><a href="https://www.instagram.com/qaimgroup">Instagram</a></div></div><div class="copyright">© 2026 مجموعة القائم للأعمال الهندسية — جميع الحقوق محفوظة</div></footer>
 <script>
-const menu=document.querySelector('.menu'),nav=document.querySelector('#nav');
-menu.onclick=()=>nav.classList.toggle('open');document.querySelectorAll('#nav a').forEach(a=>a.onclick=()=>nav.classList.remove('open'));
-const filters=document.querySelectorAll('.filter'), cards=document.querySelectorAll('.project');
-filters.forEach(btn=>btn.addEventListener('click',()=>{filters.forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;cards.forEach(card=>{const show=f==='all'||card.dataset.category===f;card.classList.toggle('hidden',!show);});}));
-const lightbox=document.querySelector('#lightbox'), lbImg=document.querySelector('#lightboxImg'),lbTitle=document.querySelector('#lightboxTitle'),lbMeta=document.querySelector('#lightboxMeta');
-cards.forEach(card=>card.addEventListener('click',()=>{lbImg.src='images/'+card.dataset.image;lbImg.alt=card.dataset.title;lbTitle.textContent=card.dataset.title;lbMeta.textContent=card.dataset.meta;lightbox.classList.add('show');lightbox.setAttribute('aria-hidden','false');document.body.classList.add('no-scroll');}));
-function closeLightbox(){lightbox.classList.remove('show');lightbox.setAttribute('aria-hidden','true');document.body.classList.remove('no-scroll');setTimeout(()=>{lbImg.src='';},250)}
-document.querySelector('.lightbox-close').onclick=closeLightbox;lightbox.addEventListener('click',e=>{if(e.target===lightbox)closeLightbox()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
+const menu = document.querySelector('.menu');
+const nav = document.querySelector('#nav');
+if (menu && nav) {
+  menu.onclick = () => nav.classList.toggle('open');
+  document.querySelectorAll('#nav a').forEach(a => a.onclick = () => nav.classList.remove('open'));
+}
+
+const projectGrid = document.querySelector('#projectGrid');
+const filters = [...document.querySelectorAll('.filter')];
+const lightbox = document.querySelector('#lightbox');
+const lbImg = document.querySelector('#lightboxImg');
+const lbTitle = document.querySelector('#lightboxTitle');
+const lbMeta = document.querySelector('#lightboxMeta');
+let activeFilter = 'all';
+
+function applyProjectFilter() {
+  if (!projectGrid) return;
+  projectGrid.querySelectorAll('.project').forEach(card => {
+    const show = activeFilter === 'all' || card.dataset.category === activeFilter;
+    card.classList.toggle('hidden', !show);
+  });
+}
+filters.forEach(btn => btn.addEventListener('click', () => {
+  filters.forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.filter || 'all';
+  applyProjectFilter();
+}));
+
+function categoryForProject(value) {
+  const c = String(value || '').toLowerCase();
+  if (c.includes('canopy') || c.includes('مظلة') || c.includes('مظلات')) return 'canopy';
+  if (c.includes('roof') || c.includes('سقف') || c.includes('تغطية') || c.includes('أسقف')) return 'roof';
+  if (c.includes('site') || c.includes('موقع') || c.includes('تنفيذ موقعي')) return 'site';
+  return 'steel';
+}
+
+function safeImageUrl(value) {
+  if (!value) return '';
+  const v = String(value).trim();
+  if (/^https?:\/\//i.test(v) || v.startsWith('/')) return v;
+  return 'images/' + v.replace(/^\.\//, '').replace(/^images\//, '');
+}
+
+function addProjectCard(project) {
+  if (!projectGrid) return;
+  const gallery = Array.isArray(project.gallery) ? project.gallery : [];
+  const imageUrl = safeImageUrl(project.image_url || gallery[0]);
+  if (!imageUrl) return;
+
+  const title = String(project.title || 'مشروع من أعمالنا');
+  const meta = String(project.description || project.category || 'أعمال هندسية');
+  const category = categoryForProject(project.category);
+  const card = document.createElement('article');
+  card.className = 'project';
+  card.dataset.category = category;
+  card.dataset.title = title;
+  card.dataset.meta = meta;
+  card.dataset.imageUrl = imageUrl;
+
+  const img = document.createElement('img');
+  img.src = imageUrl;
+  img.alt = title;
+  img.loading = 'lazy';
+  img.onerror = () => { card.remove(); };
+
+  const overlay = document.createElement('div');
+  overlay.className = 'project-overlay';
+  const small = document.createElement('small');
+  small.textContent = 'من أعمالنا';
+  const heading = document.createElement('h3');
+  heading.textContent = title;
+  const action = document.createElement('span');
+  action.textContent = 'عرض المشروع ↗';
+  overlay.append(small, heading, action);
+  card.append(img, overlay);
+  projectGrid.append(card);
+}
+
+function openLightbox(card) {
+  const imageUrl = card.dataset.imageUrl || safeImageUrl(card.dataset.image);
+  if (!lightbox || !lbImg) return;
+  lbImg.src = imageUrl;
+  lbImg.alt = card.dataset.title || '';
+  lbTitle.textContent = card.dataset.title || '';
+  lbMeta.textContent = card.dataset.meta || '';
+  lightbox.classList.add('show');
+  lightbox.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('no-scroll');
+}
+if (projectGrid) projectGrid.addEventListener('click', e => {
+  const card = e.target.closest('.project');
+  if (card) openLightbox(card);
+});
+
+function closeLightbox() {
+  if (!lightbox) return;
+  lightbox.classList.remove('show');
+  lightbox.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('no-scroll');
+  setTimeout(() => { if (lbImg) lbImg.src = ''; }, 250);
+}
+const closeButton = document.querySelector('.lightbox-close');
+if (closeButton) closeButton.onclick = closeLightbox;
+if (lightbox) lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// Public website connection: only published projects are displayed.
+(async function loadPublishedProjects() {
+  try {
+    if (!window.supabase || !window.supabase.createClient) {
+      console.error('Supabase client library did not load.');
+      return;
+    }
+    const SUPABASE_URL = 'https://lgeboriunubbtyeuxsrv.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_C76bursTy_hk0RGlxztxHQ_rWRr0L6y';
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const { data, error } = await client
+      .from('projects')
+      .select('id, title, description, category, image_url, gallery, sort_order, published, created_at')
+      .eq('published', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    (data || []).forEach(addProjectCard);
+    applyProjectFilter();
+  } catch (error) {
+    console.error('Unable to load published projects from Supabase:', error);
+  }
+})();
 </script>
 </body></html>
