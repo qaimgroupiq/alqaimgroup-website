@@ -8,6 +8,17 @@
 <link rel="shortcut icon" href="favicon.ico">
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+/* Controls for navigating all project gallery images */
+#lightbox .lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:10002;width:46px;height:46px;border:1px solid rgba(255,255,255,.35);border-radius:50%;background:rgba(20,20,20,.72);color:#fff;font-size:32px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#lightbox .lightbox-prev{left:22px}
+#lightbox .lightbox-next{right:22px}
+#lightbox .lightbox-nav:disabled{opacity:.35;cursor:default}
+#lightbox #lightboxCounter{display:block;margin-top:10px;color:#f06a45;font-size:13px;direction:ltr}
+@media(max-width:600px){#lightbox .lightbox-nav{width:38px;height:38px;font-size:27px}#lightbox .lightbox-prev{left:8px}#lightbox .lightbox-next{right:8px}}
+</style>
+
 </head>
 <body>
 <header class="site-header">
@@ -98,7 +109,15 @@
   <div class="projects-more"><span>نماذج مختارة من أعمالنا</span><span>12 / 50+</span></div>
  </div>
 </section>
-<div class="lightbox" id="lightbox" aria-hidden="true"><button class="lightbox-close" aria-label="إغلاق">×</button><div class="lightbox-content"><img id="lightboxImg" src="" alt=""><div class="lightbox-info"><p id="lightboxMeta"></p><h3 id="lightboxTitle"></h3></div></div></div>
+<div class="lightbox" id="lightbox" aria-hidden="true">
+ <button class="lightbox-close" aria-label="إغلاق">×</button>
+ <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="الصورة السابقة">‹</button>
+ <div class="lightbox-content">
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-info"><p id="lightboxMeta"></p><h3 id="lightboxTitle"></h3><small id="lightboxCounter" aria-live="polite"></small></div>
+ </div>
+ <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="الصورة التالية">›</button>
+</div>
 
 <section class="about section" id="about">
  <div class="container about-grid"><div class="about-visual"><div class="about-number"><img src="logo.png" alt="شعار مجموعة القائم"></div><div class="line"></div><p>ENGINEERING<br>WORKS</p></div>
@@ -141,6 +160,11 @@ const lightbox = document.querySelector('#lightbox');
 const lbImg = document.querySelector('#lightboxImg');
 const lbTitle = document.querySelector('#lightboxTitle');
 const lbMeta = document.querySelector('#lightboxMeta');
+const lbCounter = document.querySelector('#lightboxCounter');
+const lbPrev = document.querySelector('#lightboxPrev');
+const lbNext = document.querySelector('#lightboxNext');
+let activeGallery = [];
+let activeImageIndex = 0;
 let activeFilter = 'all';
 
 function applyProjectFilter() {
@@ -174,8 +198,14 @@ function safeImageUrl(value) {
 
 function addProjectCard(project) {
   if (!projectGrid) return;
-  const gallery = Array.isArray(project.gallery) ? project.gallery : [];
-  const imageUrl = safeImageUrl(project.image_url || gallery[0]);
+  const galleryValues = Array.isArray(project.gallery) ? project.gallery : [];
+  const galleryUrls = galleryValues.map(item => {
+    if (typeof item === 'string') return safeImageUrl(item);
+    if (item && typeof item === 'object') return safeImageUrl(item.url || item.publicUrl || item.public_url || item.path || item.image_url || '');
+    return '';
+  }).filter(Boolean);
+  const imageUrl = safeImageUrl(project.image_url || galleryUrls[0] || '');
+  const allImages = [imageUrl, ...galleryUrls].filter((url, index, arr) => url && arr.indexOf(url) === index);
   if (!imageUrl) return;
 
   const title = String(project.title || 'مشروع من أعمالنا');
@@ -187,6 +217,7 @@ function addProjectCard(project) {
   card.dataset.title = title;
   card.dataset.meta = meta;
   card.dataset.imageUrl = imageUrl;
+  card.dataset.gallery = JSON.stringify(allImages);
 
   const img = document.createElement('img');
   img.src = imageUrl;
@@ -207,13 +238,27 @@ function addProjectCard(project) {
   projectGrid.append(card);
 }
 
+function showGalleryImage(index) {
+  if (!activeGallery.length || !lbImg) return;
+  activeImageIndex = (index + activeGallery.length) % activeGallery.length;
+  lbImg.src = activeGallery[activeImageIndex];
+  lbImg.alt = (lbTitle && lbTitle.textContent) || '';
+  if (lbCounter) lbCounter.textContent = `${activeImageIndex + 1} / ${activeGallery.length}`;
+  if (lbPrev) lbPrev.disabled = activeGallery.length < 2;
+  if (lbNext) lbNext.disabled = activeGallery.length < 2;
+}
+
 function openLightbox(card) {
-  const imageUrl = card.dataset.imageUrl || safeImageUrl(card.dataset.image);
   if (!lightbox || !lbImg) return;
-  lbImg.src = imageUrl;
-  lbImg.alt = card.dataset.title || '';
+  let gallery = [];
+  try { gallery = JSON.parse(card.dataset.gallery || '[]'); } catch (_) {}
+  const fallbackImage = card.dataset.imageUrl || safeImageUrl(card.dataset.image);
+  activeGallery = (Array.isArray(gallery) ? gallery : []).filter(Boolean);
+  if (!activeGallery.length && fallbackImage) activeGallery = [fallbackImage];
+  if (!activeGallery.length) return;
   lbTitle.textContent = card.dataset.title || '';
   lbMeta.textContent = card.dataset.meta || '';
+  showGalleryImage(0);
   lightbox.classList.add('show');
   lightbox.setAttribute('aria-hidden', 'false');
   document.body.classList.add('no-scroll');
@@ -228,12 +273,19 @@ function closeLightbox() {
   lightbox.classList.remove('show');
   lightbox.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('no-scroll');
-  setTimeout(() => { if (lbImg) lbImg.src = ''; }, 250);
+  setTimeout(() => { if (lbImg) lbImg.src = ''; activeGallery = []; activeImageIndex = 0; if (lbCounter) lbCounter.textContent = ''; }, 250);
 }
 const closeButton = document.querySelector('.lightbox-close');
 if (closeButton) closeButton.onclick = closeLightbox;
+if (lbPrev) lbPrev.onclick = () => showGalleryImage(activeImageIndex - 1);
+if (lbNext) lbNext.onclick = () => showGalleryImage(activeImageIndex + 1);
 if (lightbox) lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+  if (!lightbox || !lightbox.classList.contains('show')) return;
+  if (e.key === 'ArrowLeft') showGalleryImage(activeImageIndex + 1);
+  if (e.key === 'ArrowRight') showGalleryImage(activeImageIndex - 1);
+});
 
 // Public website connection: only published projects are displayed.
 (async function loadPublishedProjects() {
